@@ -2,7 +2,6 @@
 
 RMS Chat talks to your **rxai** server. To do that it needs two things in `.env`:
 
-- `RXAI_URL` — where your rxai server lives (e.g. `https://ai.yoursite.com` or `http://localhost:3000`)
 - `RXAI_API_KEY` — a key you mint from the rxai dashboard (**free**)
 
 ## Steps
