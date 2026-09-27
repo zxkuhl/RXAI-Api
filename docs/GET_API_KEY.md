@@ -14,7 +14,6 @@ RMS Chat talks to your **rxai** server. To do that it needs two things in `.env`
    - Under the hood the dashboard calls `POST /api/keys`, which returns `{ key, ... }`.
 5. **Paste it into `.env`:**
    ```env
-   RXAI_URL=https://your-rxai-host
    RXAI_API_KEY=paste-your-key-here
    ```
 6. `npm start` and open http://localhost:7468.
