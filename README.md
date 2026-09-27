@@ -17,7 +17,7 @@ Clean white UI, Markdown replies, conversation memory — served on **port 7468*
 ```bash
 cd rms-chat
 npm install
-copy .env.example .env      # Windows  (use: cp .env.example .env  on macOS/Linux)
+node server.js/npm start
 ```
 
 Then open `.env` and fill in:
@@ -53,7 +53,7 @@ Open **http://localhost:7468**. Done.
 ```
 rms-chat/
 ├─ server.js            # Express server + rxai proxy
-├─ .env / .env.example  # configuration
+├─ .env                 # configuration
 ├─ public/
 │  ├─ index.html        # the page
 │  ├─ style.css         # the white Claude-ish theme
