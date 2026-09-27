@@ -14,7 +14,7 @@ const ASSISTANT_NAME = process.env.ASSISTANT_NAME || 'RMS AI';
 
 const configured = !!RXAI_API_KEY;
 if (!configured) {
-    console.warn('\n[!] RXAI_API_KEY not set. Copy .env.example to .env and add your key.');
+    console.warn('\n[!] RXAI_API_KEY not set. Add your key to .env.');
     console.warn('    How to get a free key: docs/GET_API_KEY.md\n');
 }
 
@@ -55,7 +55,7 @@ app.post('/api/chat', async (req, res) => {
     if (!configured) {
         return res.status(500).json({
             error: 'server_not_configured',
-            message: 'This site has no API key yet. Set RXAI_URL and RXAI_API_KEY in .env (see docs/GET_API_KEY.md).',
+            message: 'This site has no API key yet. Add your RXAI_API_KEY to .env (see docs/GET_API_KEY.md).',
         });
     }
     const { message, sessionId, userId, model } = req.body || {};
@@ -85,13 +85,50 @@ app.post('/api/chat', async (req, res) => {
     } catch (e) {
         res.status(502).json({
             error: 'upstream_unreachable',
-            message: `Couldn't reach RMS AI at ${RXAI_URL || '(unset)'}. Is it running and is RXAI_URL correct? (${e.message})`,
+            message: `Couldn't reach RMS AI. Is the backend reachable? (${e.message})`,
         });
     }
 });
 
+// ── Conversations (memory browser) ─────────────────────────────────────────────
+// These proxy the SAME rxai endpoints you'd call directly with your x-secret-key —
+// this server just attaches the key. `userId` scopes a browser's chats (rxai chat ids
+// are prefixed with it), so the list only shows this visitor's conversations.
+
+// GET /api/sessions?userId=... → the caller's saved conversations (newest first).
+app.get('/api/sessions', async (req, res) => {
+    if (!configured) return res.json({ sessions: [] });
+    const userId = String(req.query.userId || '');
+    if (!userId) return res.json({ sessions: [] });
+    try {
+        const { ok, status, data } = await rxai(`/sessions/${encodeURIComponent(userId)}`);
+        if (!ok) return res.status(status).json({ error: 'sessions_error' });
+        res.json({ sessions: data.sessions || [] });
+    } catch { res.json({ sessions: [] }); }
+});
+
+// GET /api/session/:id → one conversation's full message history.
+app.get('/api/session/:id', async (req, res) => {
+    if (!configured) return res.status(500).json({ error: 'server_not_configured' });
+    try {
+        const { ok, status, data } = await rxai(`/session/${encodeURIComponent(req.params.id)}`);
+        if (!ok) return res.status(status).json({ error: 'session_error' });
+        res.json({ session: data.session || null });
+    } catch { res.status(502).json({ error: 'upstream_unreachable' }); }
+});
+
+// DELETE /api/session/:id → permanently delete one conversation (?remove=1 upstream).
+app.delete('/api/session/:id', async (req, res) => {
+    if (!configured) return res.status(500).json({ error: 'server_not_configured' });
+    try {
+        const { ok, status, data } = await rxai(`/session/${encodeURIComponent(req.params.id)}?remove=1`, { method: 'DELETE' });
+        if (!ok) return res.status(status).json({ error: 'delete_error' });
+        res.json({ ok: data.ok !== false });
+    } catch { res.status(502).json({ error: 'upstream_unreachable' }); }
+});
+
 app.listen(PORT, () => {
     console.log(`\n  RMS Chat  →  http://localhost:${PORT}`);
-    console.log(`  Backend   →  ${RXAI_URL || '(RXAI_URL not set)'}`);
+    console.log(`  Backend   →  ${RXAI_URL}`);
     console.log(`  Configured:  ${configured ? 'yes' : 'NO — see docs/GET_API_KEY.md'}\n`);
 });

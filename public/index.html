@@ -13,6 +13,8 @@
   <header class="topbar">
     <div class="brand"><span class="dot"></span><span id="brandName">RMS AI</span></div>
     <div class="actions">
+      <span id="usage" class="usage" title="Your account usage / rate limit" hidden></span>
+      <button id="chatsBtn" class="ghost-btn">Chats</button>
       <select id="modelSelect" class="model-select" title="Model" hidden></select>
       <button id="newChat" class="ghost-btn">New chat</button>
     </div>
@@ -37,5 +39,14 @@
     </form>
     <div class="foot-note" id="footNote">RMS AI can make mistakes. Check important info.</div>
   </div>
+
+  <div id="scrim" class="scrim"></div>
+  <aside id="sidebar" class="sidebar" aria-label="Conversations">
+    <div class="sidebar-head">
+      <span>Conversations</span>
+      <button id="sidebarNew" class="ghost-btn">+ New</button>
+    </div>
+    <div id="convList" class="conv-list"></div>
+  </aside>
 </body>
 </html>

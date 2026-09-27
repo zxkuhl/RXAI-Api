@@ -21,10 +21,16 @@ routes; `server.js` attaches the key when it calls rxai.
 
 | Route             | Method | Purpose                                                        |
 |-------------------|--------|----------------------------------------------------------------|
-| `/`               | GET    | Serves the chat page (`public/`)                               |
-| `/api/config`     | GET    | `{ assistantName, configured }` for the UI                     |
-| `/api/models`     | GET    | Proxies rxai `GET /models` (used for the optional model picker)|
-| `/api/chat`       | POST   | Proxies rxai `POST /chat`, adding the `x-secret-key` header    |
+| `/`                  | GET    | Serves the chat page (`public/`)                               |
+| `/api/config`        | GET    | `{ assistantName, configured }` for the UI                     |
+| `/api/models`        | GET    | Proxies rxai `GET /models` (used for the optional model picker)|
+| `/api/chat`          | POST   | Proxies rxai `POST /chat`, adding the `x-secret-key` header    |
+| `/api/sessions`      | GET    | Proxies rxai `GET /sessions/:userId` — the caller's chat list  |
+| `/api/session/:id`   | GET    | Proxies rxai `GET /session/:id` — one chat's full history      |
+| `/api/session/:id`   | DELETE | Proxies rxai `DELETE /session/:id?remove=1` — delete a chat    |
+
+Every `/api/*` route just attaches your `x-secret-key` and forwards to the matching rxai
+endpoint — so this repo doubles as a worked example of calling each one directly.
 
 ### `/api/chat` request (browser → this server)
 ```json
@@ -63,7 +69,7 @@ reason:
 - `400 message_too_long` — message over rxai's limit
 - `429 rate_limited` — with a `resetIn` hint
 - `403 chat_restricted` — a moderator restricted that conversation
-- `502 upstream_unreachable` — rxai is down or `RXAI_URL` is wrong
+- `502 upstream_unreachable` — rxai is down or unreachable
 
 ## Files
 | File               | Role                                               |
@@ -72,7 +78,7 @@ reason:
 | `public/index.html`| Page structure                                     |
 | `public/style.css` | The white, Claude-like theme                       |
 | `public/app.js`    | Chat state, rendering (Markdown via marked+DOMPurify), fetch calls |
-| `.env`             | `PORT`, `RXAI_URL`, `RXAI_API_KEY`, `RXAI_MODEL`, `ASSISTANT_NAME` |
+| `.env`             | `PORT`, `RXAI_API_KEY`, `RXAI_MODEL`, `ASSISTANT_NAME` |
 
 ## Swapping the backend later
 Everything rxai-specific is in **one function** (`rxai()` in `server.js`) and the

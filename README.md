@@ -25,7 +25,6 @@ Then open `.env` and fill in:
 | Variable         | What it is                                             |
 |------------------|--------------------------------------------------------|
 | `PORT`           | Port to serve on (default `7468`)                      |
-| `RXAI_URL`       | Your rxai base URL, no trailing slash                  |
 | `RXAI_API_KEY`   | Your rxai key (**free** — see `docs/GET_API_KEY.md`)   |
 | `RXAI_MODEL`     | *(optional)* force a model id                          |
 | `ASSISTANT_NAME` | *(optional)* the name shown in the UI                  |
@@ -42,11 +41,13 @@ Open **http://localhost:7468**. Done.
 > Curious how it works? → **[docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md)**
 
 ## Features
-- White, minimal, Claude-like chat UI
-- Markdown + code-block rendering (sanitized)
-- Remembers your conversation (session id + transcript in `localStorage`)
+This demo calls (almost) everything the API offers, so you can see each endpoint in use:
+- White, minimal, Claude-like chat UI with Markdown + code-block rendering (sanitized)
+- **Conversations sidebar** — list, open, and delete past chats (`/sessions`, `/session/:id`)
+- **Live usage / rate-limit readout** in the header (from the `usage` field of every reply)
+- Conversation memory (session id + transcript in `localStorage`)
 - **New chat** button to start fresh
-- Optional model picker (auto-appears if your rxai returns a model list)
+- Optional model picker (auto-appears if the API returns a model list — `/models`)
 - Graceful errors (rate limits, message too long, backend down)
 
 ## Project layout
@@ -65,5 +66,5 @@ rms-chat/
 
 ## Security note
 Your `RXAI_API_KEY` is only ever used **inside `server.js`**. The browser talks to
-`/api/chat` on this server; it never sees the key. Keep `.env` out of git (it already
-is, via `.gitignore`).
+`/api/*` on this server; it never sees the key. The `.env` in this repo is a **blank
+template** — never commit a real key into it.
