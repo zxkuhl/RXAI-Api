@@ -1,0 +1,16 @@
+{
+  "name": "rms-chat",
+  "version": "1.0.0",
+  "description": "A minimal Claude-style chat website that talks to your RMS AI (rxai) API.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
