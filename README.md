@@ -1,6 +1,6 @@
 # RMS Chat
 
-A tiny, self-hosted **Claude-style chat website** that talks to your **RMS AI (rxai)** API.
+A tiny, self-hosted **chat website** that talks to your **RMS AI (rxai)** API.
 Clean white UI, Markdown replies, conversation memory — served on **port 7468**.
 
 - Front end: plain HTML/CSS/JS (no framework, no build step)
