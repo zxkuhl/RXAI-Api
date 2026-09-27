@@ -8,7 +8,7 @@ RMS Chat talks to your **rxai** server. To do that it needs two things in `.env`
 ## Steps
 
 1. **Open your rxai site** in a browser — the same address you'll put in `RXAI_URL`.
-2. **Sign in.** rxai supports Google and GitHub login (and a dev login if the server has `DEV_LOGIN=true`). Go to `/login` if you're not redirected.
+2. **Sign in.** rxai supports Google and GitHub login. Go to `/login` if you're not redirected.
 3. **Open the Dashboard** (`/dashboard`). This is where your account and keys live.
 4. **Create an API key.** Use the "API keys" section to make a new key (optionally give it a label like `rms-chat`). Copy it — it's shown once.
    - Under the hood the dashboard calls `POST /api/keys`, which returns `{ key, ... }`.
